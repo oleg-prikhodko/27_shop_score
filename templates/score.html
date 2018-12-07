@@ -18,6 +18,10 @@
     crossorigin="anonymous">
 
   <style>
+    .default {
+      color: black;
+    }
+
     .low {
       color: green;
     }
@@ -36,7 +40,7 @@
 <body>
 
   <div class="container">
-    <h1 id="message"></h1>
+    <h1 id="message" class="default"></h1>
     <h3 id="confirmed"></h3>
     <h3 id="unconfirmed"></h3>
   </div><!-- /.container -->
@@ -52,6 +56,7 @@
         .then(response => response.json())
         .then(json => {
           if (json.time_secs === null) {
+            messageElement.className = "default"
             messageElement.textContent = "All orders have been confirmed"
           } else {
             let className = ""
