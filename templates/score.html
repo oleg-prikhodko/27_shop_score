@@ -29,6 +29,24 @@
     .high {
       color: #d9534f;
     }
+
+    .container {
+      padding-top: 25px;
+    }
+
+    @media (min-width: 1920px) {
+      h1 {
+        font-size: 50px;
+      }
+
+      h4 {
+        font-size: 25px;
+      }
+
+      .container {
+        padding-top: 35px;
+      }
+    }
   </style>
 
 </head>
@@ -36,7 +54,8 @@
 <body>
 
   <div class="container">
-    <h1 id="message" class="text-center" style="padding-top: 25px;"></h1>
+    <h1 id="message" class="text-center"></h1>
+    <br>
     <h4 id="confirmed" class="text-center"></h4>
     <h4 id="unconfirmed" class="text-center"></h4>
   </div><!-- /.container -->
