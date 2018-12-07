@@ -37,17 +37,22 @@
 
   <div class="container">
     <h1 id="message"></h1>
+    <h3 id="confirmed"></h3>
+    <h3 id="unconfirmed"></h3>
   </div><!-- /.container -->
 
   <script>
     const messageElement = document.getElementById("message")
+    const confirmedElement = document.getElementById("confirmed")
+    const unconfirmedElement = document.getElementById("unconfirmed")
+
     const tenSeconds = 10000
     function getProcessingTime() {
-      fetch("/time")
+      fetch("/info")
         .then(response => response.json())
         .then(json => {
           if (json.time_secs === null) {
-            messageElement.textContent = json.message
+            messageElement.textContent = "All orders have been confirmed"
           } else {
             let className = ""
             if (json.time_secs / 60 <= 7) {
@@ -65,6 +70,9 @@
             }
             messageElement.textContent = waitString
           }
+
+          confirmedElement.textContent = parseInt(json.confirmed_today)
+          unconfirmedElement.textContent = parseInt(json.total_uncomfirmed)
         })
         .catch(err => console.log(err))
     }
