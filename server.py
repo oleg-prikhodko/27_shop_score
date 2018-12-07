@@ -62,5 +62,7 @@ def info():
 
 
 if __name__ == "__main__":
+    DEFAULT_PORT = 5000
     debug = bool(os.environ.get("FLASK_DEBUG", False))
-    app.run(debug=debug)
+    port = int(os.environ.get("PORT", DEFAULT_PORT))
+    app.run(debug=debug, host="0.0.0.0", port=port)
