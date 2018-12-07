@@ -22,16 +22,15 @@ class Order(db.Model):
 def get_orders_info():
     orders_info = {
         "time_secs": None,
-        "message": None,
         "confirmed_today": 0,
-        "uncomfirmed": 0,
+        "total_uncomfirmed": 0,
     }
 
     unconfirmed_condition = Order.confirmed.is_(None)
     unconfirmed_orders_count = Order.query.filter(
         unconfirmed_condition
     ).count()
-    orders_info["uncomfirmed"] = unconfirmed_orders_count
+    orders_info["total_uncomfirmed"] = unconfirmed_orders_count
     oldest_unconfirmed_order = None
 
     if unconfirmed_orders_count > 0:
@@ -43,8 +42,6 @@ def get_orders_info():
         now = datetime.now()
         delta = now - oldest_unconfirmed_order.created
         orders_info["time_secs"] = delta.seconds
-    else:
-        orders_info["message"] = "All orders have been confirmed"
 
     confirmed_today_count = Order.query.filter(
         db.cast(Order.confirmed, db.Date) == date.today()
