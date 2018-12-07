@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import date, datetime
 
 from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
@@ -19,26 +19,49 @@ class Order(db.Model):
         return "Order: {}, {}".format(self.created, self.status)
 
 
+def get_orders_info():
+    orders_info = {
+        "time_secs": None,
+        "message": None,
+        "confirmed_today": 0,
+        "uncomfirmed": 0,
+    }
+
+    unconfirmed_condition = Order.confirmed.is_(None)
+    unconfirmed_orders_count = Order.query.filter(
+        unconfirmed_condition
+    ).count()
+    orders_info["uncomfirmed"] = unconfirmed_orders_count
+    oldest_unconfirmed_order = None
+
+    if unconfirmed_orders_count > 0:
+        oldest_unconfirmed_order = (
+            Order.query.filter(unconfirmed_condition)
+            .order_by(Order.created)
+            .first()
+        )
+        now = datetime.now()
+        delta = now - oldest_unconfirmed_order.created
+        orders_info["time_secs"] = delta.seconds
+    else:
+        orders_info["message"] = "All orders have been confirmed"
+
+    confirmed_today_count = Order.query.filter(
+        db.cast(Order.confirmed, db.Date) == date.today()
+    ).count()
+    orders_info["confirmed_today"] = confirmed_today_count
+
+    return orders_info
+
+
 @app.route("/")
 def score():
     return render_template("score.html")
 
 
-@app.route("/time")
-def get_order_processing_time():
-    oldest_unconfirmed_order = (
-        Order.query.filter(Order.confirmed.is_(None))
-        .order_by(Order.created)
-        .first()
-    )
-    response = {"time_secs": None, "message": None}
-    if oldest_unconfirmed_order is not None:
-        now = datetime.now()
-        delta = now - oldest_unconfirmed_order.created
-        response["time_secs"] = delta.seconds
-    else:
-        response["message"] = "No unconfirmed orders"
-    return jsonify(response)
+@app.route("/info")
+def info():
+    return jsonify(get_orders_info())
 
 
 if __name__ == "__main__":
