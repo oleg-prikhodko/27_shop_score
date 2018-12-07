@@ -17,6 +17,20 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
     crossorigin="anonymous">
 
+  <style>
+    .low {
+      color: green;
+    }
+
+    .medium {
+      color: yellow;
+    }
+
+    .high {
+      color: red;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -35,7 +49,21 @@
           if (json.time_secs === null) {
             messageElement.textContent = json.message
           } else {
-            messageElement.textContent = json.time_secs
+            let className = ""
+            if (json.time_secs / 60 <= 7) {
+              messageElement.className = "low"
+            } else if (json.time_secs / 60 <= 30) {
+              messageElement.className = "medium"
+            } else {
+              messageElement.className = "high"
+            }
+            let waitString = ""
+            if (json.time_secs / 60 > 1) {
+              waitString = `${parseInt(json.time_secs / 60)} minutes`
+            } else {
+              waitString = `${json.time_secs} seconds`
+            }
+            messageElement.textContent = waitString
           }
         })
         .catch(err => console.log(err))
