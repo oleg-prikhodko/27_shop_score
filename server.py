@@ -57,7 +57,7 @@ def score():
 
 
 @app.route("/info")
-def info():
+def get_orders_info_json():
     return jsonify(get_orders_info())
 
 
