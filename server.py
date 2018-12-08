@@ -1,7 +1,7 @@
 import os
 from datetime import date, datetime
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, send_file
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -59,6 +59,11 @@ def score():
 @app.route("/info")
 def info():
     return jsonify(get_orders_info())
+
+
+@app.route("/robots.txt")
+def get_robots_file():
+    return send_file("robots.txt")
 
 
 if __name__ == "__main__":
