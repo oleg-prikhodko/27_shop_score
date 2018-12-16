@@ -34,6 +34,15 @@ class Order(db.Model):
 
 
 def get_orders_info():
+    """Use this function to get info about order confirmation.
+    Info includes:
+    'time_secs' - longest time of order still in processing (if any),
+    'confirmed_today' - number of orders confirmed today,
+    'total_uncomfirmed' - number of orders awaiting confirmation.
+
+    Returns:
+        dict: dictionary containing orders info
+    """
     orders_info = {
         "time_secs": None,
         "confirmed_today": 0,
