@@ -9,14 +9,28 @@ app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql://score:Rysherat2@shopscore.devman.org/shop"
 db = SQLAlchemy(app)
-db.Model.metadata.reflect(db.engine)
 
 
 class Order(db.Model):
-    __table__ = db.Model.metadata.tables["orders"]
+    """This class represent a record in orders table.
+    Only two columns from that table matters to the program:
+    'created' - order creation date and time,
+    'confirmed' - order confirmation date and time
+    """
+
+    __table__ = db.Table(
+        "orders",
+        db.Model.metadata,
+        db.Column("created", db.DateTime),
+        db.Column("confirmed", db.DateTime),
+        autoload=True,
+        autoload_with=db.engine,
+    )
 
     def __str__(self):
-        return "Order: {}, {}".format(self.created, self.status)
+        return "Order<created: {}, confirmed: {}>".format(
+            self.created, self.confirmed
+        )
 
 
 def get_orders_info():
